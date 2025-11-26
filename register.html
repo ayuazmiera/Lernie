@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Register - LERNIE</title>
+  <link rel="stylesheet" href="styleRegister.css">
+</head>
+<body class="gradient-bg">
+  <header>
+    <div class="logo">LERNIE</div>
+    <nav>
+      <a href="register.html" class="nav-btn">Register</a>
+      <a href="login.html" class="nav-btn">Login</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="left-section">
+      <h1>SMART PEER LEARNING PLATFORM</h1>
+      <p>Website for matches students with peers for study groups based on skills and subjects.</p>
+       <!-- Image Section -->
+    <section class="image-section">
+      <img src="picture_2.png" alt="Smart Peer Learning" class="registration-image" />
+    </section>
+    </section>
+
+    <section class="right-section">
+      <div class="form-card">
+        <h2>REGISTRATION</h2>
+        <form id="registerForm">
+          <label>Name <span>(Enter your full name)</span></label>
+          <input type="text" id="name" placeholder="Ali Bin Ahmad" required>
+
+          <label>No Matric <span>(123456)</span></label>
+          <input type="text" id="matrix" placeholder="123456" required>
+
+          <label>Course</label>
+          <select id="course" required>
+            <option value="">-- Select Course --</option>
+            <option value="CAS">CAS</option>
+            <option value="COB">COB</option>
+            <option value="COLGIS">COLGIS</option>
+          </select>
+
+          <label>Email <span>(ali@gmail.com)</span></label>
+          <input type="email" id="email" placeholder="Email" required>
+
+          <label>Password <span>(Use at least 8 characters)</span></label>
+          <input type="password" id="password" placeholder="Password" required>
+
+          <button type="submit" class="submit-btn">Register</button>
+        </form>
+      </div>
+    </section>
+
+   
+  </main>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore-compat.js"></script>
+
+  <script src="firebase.js"></script>
+
+  <script>
+    const registerForm = document.getElementById('registerForm');
+
+    // Handle form submission
+    registerForm.addEventListener('submit', async (e) => {
+      e.preventDefault(); // Prevent the default form submission
+
+      const name = document.getElementById('name').value;
+      const matrix = document.getElementById('matrix').value;
+      const course = document.getElementById('course').value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      // Firebase authentication to create a new user
+      try {
+        const auth = firebase.auth();
+        await auth.createUserWithEmailAndPassword(email, password);
+        const user = auth.currentUser;
+
+        // Add additional user data to Firestore
+        const db = firebase.firestore();
+        await db.collection('students').doc(user.uid).set({
+          name: name,
+          matrix: matrix,
+          course: course,
+          email: email
+        });
+
+        // Pop-up success message
+        alert("Register successful");
+
+        // Redirect to login page after a successful registration
+        window.location.href = 'login.html';
+      } catch (error) {
+        console.error("Error during registration: ", error.message);
+        alert("Registration failed. Please try again.");
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lernie - Login</title>
+  <link rel="stylesheet" href="styleLogin.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div class="container">
+    <header class="navbar">
+      <div class="logo">LERNIE</div>
+      <nav>
+        <a href="register.html" class="btn btn-secondary">Register</a>
+        <a href="login.html" class="btn btn-primary">Login</a>
+      </nav>
+    </header>
+
+    <main class="content-section">
+      <div class="hero-text">
+        <h1>SMART PEER LEARNING PLATFORM</h1>
+        <p>Website for matches students with peers for study groups based on skills and subjects.</p>
+        <a href="explore.html" class="btn btn-explore">Let's explore</a>
+      </div>
+
+      <div class="login-card">
+        <h2>Welcome</h2>
+        <p>Please enter your details</p>
+
+        <form onsubmit="return handleLogin(event)">
+          <div class="form-group">
+            <label for="loginEmail">Email</label>
+            <input type="email" id="loginEmail" required />
+          </div>
+          <div class="form-group">
+            <label for="loginPassword">Password</label>
+            <div class="password-input-wrapper">
+              <input type="password" id="loginPassword" required minlength="8" />
+              <span class="password-toggle" onclick="togglePassword()">👁️</span>
+            </div>
+          </div>
+          <a href="forget_Pass.html" class="forgot-password">Forget Password?</a>
+          <button type="submit" class="btn btn-login">Log In</button>
+        </form>
+
+        <p class="signup-link">Don't have an account? <a href="register.html">Sign Up now</a></p>
+      </div>
+    </main>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAsZIqVtjiLb9jmCfIMFXkpOPH2NP8uTJg",
+      authDomain: "lernie-11007.firebaseapp.com",
+      projectId: "lernie-11007",
+      storageBucket: "lernie-11007.appspot.com",
+      messagingSenderId: "270699557554",
+      appId: "1:270699557554:web:e0f0037c467694689a8fab",
+      measurementId: "G-3C5G8RFEY1"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    window.handleLogin = function (event) {
+      event.preventDefault();
+      const email = document.getElementById("loginEmail").value.trim();
+      const password = document.getElementById("loginPassword").value;
+
+      if (!email || password.length < 8) {
+        alert("Please enter a valid email and password (8 characters or more).");
+        return false;
+      }
+
+      signInWithEmailAndPassword(auth, email, password)
+        .then(() => {
+          alert("Login successful!");
+          window.location.href = "homepage.html";
+        })
+        .catch((error) => {
+          console.error("Login failed:");
+          alert("Login failed: Please enter correct email or password ");
+        });
+
+      return false;
+    };
+
+    window.togglePassword = function () {
+      const passwordField = document.getElementById("loginPassword");
+      const toggle = passwordField.nextElementSibling;
+      if (passwordField.type === "password") {
+        passwordField.type = "text";
+        toggle.textContent = "🙈";
+      } else {
+        passwordField.type = "password";
+        toggle.textContent = "👁️";
+      }
+    };
+  </script>
+</body>
+</html>

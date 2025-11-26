@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LERNIE - Smart Peer Learning Platform</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: url('picture_1.png') no-repeat center center fixed;
+      background-size: cover;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      color: #1a1a1a;
+      overflow: hidden;
+      filter: hue-rotate(180deg) saturate(0.5) brightness(0.8); /* Apply a pastel blue filter */
+    }
+
+    /* Top bar with logo and buttons */
+    header {
+      position: absolute;
+      top: 20px;
+      left: 30px;
+      right: 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1; /* ensure nav stays above overlay */
+    }
+
+    .logo {
+      font-weight: bold;
+      font-size: 20px;
+    }
+
+    nav {
+      display: flex;
+      gap: 10px;
+    }
+
+    /* Reusable button style */
+    .nav-btn, .explore-btn {
+      padding: 8px 20px;
+      border: 2px solid #000;
+      background: transparent;
+      border-radius: 20px;
+      text-decoration: none;
+      color: black;
+      font-weight: 500;
+      display: inline-block;
+    }
+
+    /* Main content */
+    .container {
+      text-align: center;
+      max-width: 700px;
+      padding: 20px;
+      border-radius: 10px;
+      z-index: 1; /* ensure container is above overlay */
+    }
+
+    .container h1 {
+      font-size: 50px;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .container p {
+      font-size: 20px;
+      font-weight: 400;
+      margin-bottom: 20px;
+    }
+
+    .illustration {
+      margin-top: 30px;
+    }
+
+    .illustration img {
+      width: 100%;
+      max-width: 1000px;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+  
+  <!-- Header with Logo and Buttons -->
+  <header>
+    <div class="logo">LERNIE</div>
+    <nav>
+      <a href="register.html" class="nav-btn">Register</a>
+      <a href="login.html" class="nav-btn">Login</a>
+    </nav>
+  </header>
+
+  <!-- Main content -->
+  <div class="container">
+    <h1>SMART PEER LEARNING PLATFORM</h1>
+    <p>Website for matches students with peers for study groups based on skills and subjects.</p>
+    <a href="explore.html" class="explore-btn">Let's explore</a>
+  </div>
+
+</body>
+</html>

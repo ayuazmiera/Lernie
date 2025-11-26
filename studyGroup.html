@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lernie - Study Group</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to right, #c2f0e7, #a3ccff);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    nav {
+      background-color: white;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-evenly;
+      font-weight: bold;
+      font-size: 18px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    nav a { text-decoration: none; color: black; padding: 0 10px; }
+    .dropdown { position: relative; display: inline-block; }
+    .dropdown-content {
+      display: none; position: absolute; background-color: #f9f9f9;
+      min-width: 120px; box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+      z-index: 1; right: 0; margin-top: 5px; border-radius: 5px;
+    }
+    .dropdown-content a {
+      color: black; padding: 8px 12px; text-decoration: none;
+      display: block; font-size: 0.9em; text-align: left;
+    }
+    .dropdown-content a:hover { background-color: #f1f1f1; }
+    .dropdown:hover .dropdown-content { display: block; }
+
+    .container {
+      flex-grow: 1; display: flex; flex-direction: column; align-items: center;
+      padding: 40px; margin: 20px auto; background-color: rgba(255,255,255,0.9);
+      border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      max-width: 800px; width: 100%;
+    }
+    h2 { text-align: center; font-weight: 700; margin-bottom: 20px; color: #333; }
+    label { display: block; font-size: 14px; margin-bottom: 6px; font-weight: 500; color: #555; }
+    input, select, textarea {
+      width: calc(100% - 16px); padding: 8px; margin-bottom: 15px;
+      font-size: 14px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box;
+    }
+    .btn {
+      background: linear-gradient(to right, #6abcb5, #6a95cb);
+      color: white; padding: 10px 25px; font-size: 16px; border: none;
+      border-radius: 25px; cursor: pointer; margin: 5px; transition: all 0.3s ease;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .btn:hover { opacity: 0.9; transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+    .group-list { margin-top: 30px; background: white; padding: 20px; border-radius: 10px;
+      width: 100%; box-shadow: 0 0 8px rgba(0,0,0,0.1); box-sizing: border-box;
+    }
+    .group-item {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 15px 0; border-bottom: 1px dashed #eee; color: #555; font-size: 15px;
+    }
+    .group-item:last-child { border-bottom: none; }
+
+    /* Chat Interface */
+    .chat-interface {
+      display: none; flex-direction: column; background: white;
+      padding: 20px; max-width: 700px; margin: 30px auto; border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .chat-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-bottom: 10px; border-bottom: 1px solid #eee;
+    }
+    .chat-header .member-list { font-size: 14px; color: #666; }
+    .chat-box {
+      flex-grow: 1; overflow-y: auto; max-height: 400px; margin: 15px 0;
+      background-color: #f9f9f9; border-radius: 8px; padding: 15px;
+      display: flex; flex-direction: column; gap: 15px;
+    }
+    .message { padding: 10px 15px; border-radius: 20px; max-width: 70%; word-wrap: break-word; }
+    .sent { background: #1a73e8; color: white; align-self: flex-end; }
+    .received { background: #e0e0e0; color: #333; align-self: flex-start; }
+    .message-input-area { display: flex; gap: 10px; align-items: center; }
+    .message-input-area input[type=text] {
+      flex-grow: 1; padding: 10px; border: 1px solid #ccc; border-radius: 25px;
+    }
+    .reminder-box { margin-top: 15px; padding: 10px; border: 1px solid #ccc; border-radius: 8px; background:#f9f9f9; }
+    .reminder-item { background:#e6f7ff; padding:5px 10px; border-radius:6px; margin-bottom:5px;
+      display:flex; justify-content:space-between; align-items:center;
+    }
+    .reminder-item button { background:#ff4d4f; color:white; border:none; padding:3px 8px; border-radius:5px; cursor:pointer; }
+  </style>
+</head>
+
+<body>
+<nav>
+  <a href="homepage.html">Home</a>
+  <a href="peerMatch.html">Peer Matching</a>
+  <a href="message.html">Message</a>
+  <a href="studyGroup.html">Study Group</a>
+  <div class="dropdown">
+    <a href="#">Profile ▼</a>
+    <div class="dropdown-content">
+      <a href="website.html" onclick="logout()">Log out</a>
+    </div>
+  </div>
+</nav>
+
+  <!-- Study Group Search -->
+  <div id="studyGroupSection" class="container">
+    <h2>Study Group</h2>
+    <form id="searchForm">
+      <label>SUBJECT:</label>
+      <input type="text" id="searchSubject" required />
+      <button type="submit" class="btn">Search</button>
+    </form>
+    <div id="groupResults" class="group-list" style="display:none;"></div>
+    <hr>
+    <h2>Create Study Group</h2>
+    <form id="createGroupForm">
+      <label>GROUP NAME:</label>
+      <input type="text" id="groupName" required />
+      <label>SUBJECT:</label>
+      <input type="text" id="groupSubject" required />
+      <label>DESCRIPTION:</label>
+      <textarea id="description" rows="3" required></textarea>
+      <button type="submit" class="btn">Create Group</button>
+    </form>
+  </div>
+
+  <!-- Chat Interface -->
+  <div id="groupChatInterface" class="chat-interface">
+    <div class="chat-header">
+      <button class="btn" onclick="showStudyGroupSection()">⬅ Back</button>
+      <div>
+        <strong id="groupChatName"></strong>
+        <div class="member-list" id="memberList"></div>
+      </div>
+    </div>
+
+    <div class="chat-box" id="groupChatBox"></div>
+    <div class="message-input-area">
+      <input type="text" id="groupMessageInput" placeholder="Type a message..." />
+      <button id="sendGroupMessageBtn" class="btn">Send</button>
+      <input type="file" id="fileInput" style="display:none;">
+      <button id="fileBtn" class="btn">📎 File</button>
+    </div>
+
+    <div class="reminder-box">
+      <h4>Set Reminder</h4>
+      <input type="date" id="reminderDate">
+      <input type="time" id="reminderTime">
+      <button class="btn" id="setReminderBtn">Set Reminder</button>
+      <div id="reminderList"></div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs, query, where, updateDoc, doc, onSnapshot, arrayUnion } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-storage.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAsZIqVtjiLb9jmCfIMFXkpOPH2NP8uTJg",
+      authDomain: "lernie-11007.firebaseapp.com",
+      projectId: "lernie-11007",
+      storageBucket: "lernie-11007.appspot.com",
+      messagingSenderId: "270699557554",
+      appId: "1:270699557554:web:e0f0037c467694689a8fab"
+    };
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+    const storage = getStorage(app);
+
+    let currentUser = null;
+    let currentGroupId = null;
+    let reminders = JSON.parse(localStorage.getItem("reminders") || "[]");
+    let timers = {};
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) currentUser = user;
+      else alert("Please login first.");
+    });
+
+    const groupResults = document.getElementById("groupResults");
+    const studyGroupSection = document.getElementById("studyGroupSection");
+    const groupChatInterface = document.getElementById("groupChatInterface");
+    const groupChatName = document.getElementById("groupChatName");
+    const groupChatBox = document.getElementById("groupChatBox");
+    const memberList = document.getElementById("memberList");
+
+    window.showStudyGroupSection = () => {
+      studyGroupSection.style.display = "flex";
+      groupChatInterface.style.display = "none";
+    };
+
+    // Create new group
+    document.getElementById("createGroupForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const groupName = document.getElementById("groupName").value;
+      const subject = document.getElementById("groupSubject").value;
+      const description = document.getElementById("description").value;
+      await addDoc(collection(db, "studyGroups"), { groupName, subject, description, members: [] });
+      alert("✅ Study group created!");
+      e.target.reset();
+    });
+
+    // Search groups
+    document.getElementById("searchForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const subject = document.getElementById("searchSubject").value.trim();
+      const q = query(collection(db, "studyGroups"), where("subject", "==", subject));
+      const snap = await getDocs(q);
+      groupResults.innerHTML = "";
+      if (snap.empty) groupResults.innerHTML = "<p>No groups found.</p>";
+      else snap.forEach(docSnap => {
+        const d = docSnap.data();
+        const div = document.createElement("div");
+        div.className = "group-item";
+        div.innerHTML = `<div><strong>${d.groupName}</strong><br>${d.subject}<br>${d.description}</div>
+        <button class="btn" onclick="joinGroup('${docSnap.id}', '${d.groupName}')">Join</button>`;
+        groupResults.appendChild(div);
+      });
+      groupResults.style.display = "block";
+    });
+
+    // Join group and listen for member updates
+    window.joinGroup = async (id, name) => {
+      currentGroupId = id;
+      groupChatName.textContent = name;
+      studyGroupSection.style.display = "none";
+      groupChatInterface.style.display = "flex";
+
+      const userName = currentUser?.email || "Anonymous";
+      await updateDoc(doc(db, "studyGroups", id), {
+        members: arrayUnion(userName)
+      });
+
+      onSnapshot(doc(db, "studyGroups", id), (snap) => {
+        const data = snap.data();
+        const members = data?.members || [];
+        memberList.textContent = "👥 Members: " + members.join(", ");
+      });
+    };
+
+    // Chat (local simulation)
+    document.getElementById("sendGroupMessageBtn").onclick = () => {
+      const text = document.getElementById("groupMessageInput").value.trim();
+      if (!text) return;
+      const msg = document.createElement("div");
+      msg.className = "message sent";
+      msg.textContent = text;
+      groupChatBox.appendChild(msg);
+      document.getElementById("groupMessageInput").value = "";
+    };
+
+    // File upload
+    document.getElementById("fileBtn").onclick = () => document.getElementById("fileInput").click();
+    document.getElementById("fileInput").onchange = async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const refPath = ref(storage, `groupFiles/${Date.now()}_${file.name}`);
+      await uploadBytes(refPath, file);
+      const url = await getDownloadURL(refPath);
+      const msg = document.createElement("div");
+      msg.className = "message sent";
+      msg.innerHTML = `<a href="${url}" target="_blank">📎 ${file.name}</a>`;
+      groupChatBox.appendChild(msg);
+    };
+
+    // Reminder
+    const reminderList = document.getElementById("reminderList");
+    document.getElementById("setReminderBtn").onclick = () => {
+      const date = document.getElementById("reminderDate").value;
+      const time = document.getElementById("reminderTime").value;
+      if (!date || !time) return alert("Select date & time");
+      const dt = new Date(`${date}T${time}`);
+      const id = Date.now();
+      reminders.push({ id, time: dt.toISOString() });
+      localStorage.setItem("reminders", JSON.stringify(reminders));
+      scheduleReminder({ id, time: dt.toISOString() });
+      updateReminders();
+    };
+    function scheduleReminder(r) {
+      const ms = new Date(r.time).getTime() - Date.now();
+      if (ms > 0) {
+        timers[r.id] = setTimeout(() => {
+          alert("⏰ Reminder: Study session starting!");
+          reminders = reminders.filter(x => x.id !== r.id);
+          localStorage.setItem("reminders", JSON.stringify(reminders));
+          updateReminders();
+        }, ms);
+      }
+    }
+    function updateReminders() {
+      reminderList.innerHTML = "";
+      reminders.forEach(r => {
+        const d = new Date(r.time);
+        const div = document.createElement("div");
+        div.className = "reminder-item";
+        div.innerHTML = `<span>${d.toLocaleString()}</span><button onclick="deleteReminder(${r.id})">Delete</button>`;
+        reminderList.appendChild(div);
+      });
+    }
+    window.deleteReminder = (id) => {
+      reminders = reminders.filter(x => x.id !== id);
+      localStorage.setItem("reminders", JSON.stringify(reminders));
+      updateReminders();
+    };
+    reminders.forEach(scheduleReminder);
+    updateReminders();
+
+    window.logout = () => { alert("Logging out..."); window.location.href = "website.html"; };
+  </script>
+</body>
+</html>

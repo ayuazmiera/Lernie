@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>LERNIE - Smart Peer Match</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family:'Poppins',sans-serif; background:linear-gradient(to right,#c2f0e7,#a3ccff); margin:0; padding:0;}
+    nav { background:white; padding:15px 30px; display:flex; justify-content:space-evenly; font-weight:bold; font-size:18px; box-shadow:0 2px 4px rgba(0,0,0,0.1); }
+    nav a { text-decoration:none; color:black; }
+    .dropdown { position: relative; display: inline-block; }
+    .dropdown-content {
+      display: none; position: absolute; background-color: #f9f9f9;
+      min-width: 120px; box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+      z-index: 1; right: 0; margin-top: 5px; border-radius: 5px;
+    }
+    .dropdown-content a {
+      color: black; padding: 8px 12px; text-decoration: none;
+      display: block; font-size: 0.9em; text-align: left;
+    }
+    .dropdown-content a:hover { background-color: #f1f1f1; }
+    .dropdown:hover .dropdown-content { display: block; }
+    .notif { background:red; color:white; padding:4px 10px; border-radius:12px; font-size:14px; display:none; cursor:pointer;}
+    .container { max-width:900px; margin:30px auto; background:white; padding:30px; border-radius:12px; box-shadow:0 4px 10px rgba(0,0,0,0.1); }
+    h2 { text-align:center; margin-bottom:20px;}
+    .hidden { display:none;}
+    .btn { background:linear-gradient(to right,#6abcb5,#6a95cb); color:white; border:none; padding:10px 25px; border-radius:25px; cursor:pointer; font-size:16px; margin:10px 5px;}
+    .peer-item { display:flex; justify-content:space-between; align-items:center; border-bottom:1px dashed #ccc; padding:10px 0;}
+    .chat-box { height:250px; overflow-y:auto; border:1px solid #ccc; border-radius:8px; padding:10px; margin-bottom:10px; display:flex; flex-direction:column;}
+    .message { padding:8px 12px; border-radius:20px; margin:5px 0; max-width:70%; word-wrap:break-word;}
+    .sent { background:#1a73e8; color:white; align-self:flex-end; margin-left:auto;}
+    .received { background:#ccc; color:#333; align-self:flex-start; margin-right:auto;}
+    .chat-input { display:flex; gap:10px; margin-top:10px;}
+    .chat-input input[type=text] { flex-grow:1; padding:10px; border-radius:20px; border:1px solid #ccc;}
+  </style>
+</head>
+
+<body>
+ <nav>
+  <a href="homepage.html">Home</a>
+  <a href="peerMatch.html">Peer Matching</a>
+  <a href="message.html">Message</a>
+  <a href="studyGroup.html">Study Group</a>
+  <div class="dropdown">
+    <a href="#">Profile ▼</a>
+    <div class="dropdown-content">
+      <a href="website.html" onclick="logout()">Log out</a>
+    </div>
+  </div>
+</nav>
+
+  <div class="container">
+    <!-- Step 1: Select Subject -->
+    <div id="subjectStep">
+      <h2>Select Subject</h2>
+      <select id="subjectSelect">
+        <option value="">-- Choose Subject --</option>
+        <option value="math">Math</option>
+        <option value="programming">Programming</option>
+      </select>
+      <button class="btn" id="startQuizBtn">Start Quiz</button>
+    </div>
+
+    <!-- Step 2: Quiz Step -->
+    <div id="quizStep" class="hidden">
+      <h2>Answer All Questions</h2>
+      <form id="quizForm"></form>
+      <button class="btn" id="submitQuizBtn">Submit Quiz</button>
+    </div>
+
+    <!-- Step 3: Display Result -->
+    <div id="resultStep" class="hidden">
+      <h2>Your Result</h2>
+      <p id="scoreText"></p>
+      <p id="skillText"></p>
+      <button class="btn" id="findPeersBtn">Find Peers</button>
+    </div>
+
+    <!-- Step 4: Display Peer Matches -->
+    <div id="peerStep" class="hidden">
+      <h2>Top 3 Peer Matches</h2>
+      <div class="peer-list" id="peerList"></div>
+    </div>
+
+    <!-- Step 5: Chat with Peers -->
+    <div id="chatStep" class="hidden">
+      <h2>Chat with <span id="chatPeerName"></span></h2>
+      <div class="chat-box" id="chatBox"></div>
+      <div class="chat-input">
+        <input type="text" id="chatMessage" placeholder="Type a message...">
+        <button class="btn" id="sendMessageBtn">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase Script -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
+    import { getFirestore, collection, getDocs, getDoc, doc, serverTimestamp, addDoc, setDoc, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAsZIqVtjiLb9jmCfIMFXkpOPH2NP8uTJg",
+      authDomain: "lernie-11007.firebaseapp.com",
+      projectId: "lernie-11007",
+      storageBucket: "lernie-11007.appspot.com",
+      messagingSenderId: "270699557554",
+      appId: "1:270699557554:web:e0f0037c467694689a8fab"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    let currentUserId = null, selectedSubject = "", quizQuestions = [], quizScore = 0, skillLevel = "", chatId = null, currentPeer = null;
+    let rejectCount = 0; // Track the number of rejections
+    let peers = []; // Store the current list of peers
+
+    // Check if the user is logged in
+    onAuthStateChanged(auth, (user) => {
+      if (user) currentUserId = user.uid;
+      else { alert("Please login first"); window.location.href = "login.html"; }
+    });
+
+    // === QUIZ ===
+    const questionBank = {
+      programming: [
+        { q: "Which statement is true about Java?", options: ["Java is a sequence-dependent programming language", "Java is a code dependent programming language", "Java is a platform-dependent programming language", "Java is a platform-independent programming language"], answer: "Java is a platform-independent programming language" },
+        { q: "Which component is used to compile, debug and execute Java programs?", options: ["JRE", "JIT", "JDK", "JVM"], answer: "JDK" },
+        { q: "Which of these cannot be used for a variable name in Java?", options: ["identifier & keyword", "identifier", "keyword", "none of the mentioned"], answer: "keyword" },
+        { q: "What is the extension of java code files?", options: [".js", ".txt", ".class", ".java"], answer: ".java" },
+        { q: "Which of the following is not an OOPS concept in Java?", options: ["Polymorphism", "Inheritance", "Compilation", "Encapsulation"], answer: "Compilation" },
+        { q: "Which of the following is a superclass of every class in Java?", options: ["ArrayList", "Abstract class", "Object class", "String"], answer: "Object class" },
+        { q: "Which of these packages contains the error StackOverflowError in Java?", options: ["java.io", "java.system", "java.lang", "java.util"], answer: "java.lang" },
+        { q: "Which of these keywords are used for the block to be examined for exceptions?", options: ["check", "throw", "catch", "try"], answer: "try" },
+        { q: "Which one of the following is not an access modifier?", options: ["protected", "void", "public", "private"], answer: "void" },
+        { q: "What is the numerical range of a char data type in Java?", options: ["0 to 256", "-128 to 127", "0 to 65535", "0 to 32767"], answer: "0 to 65535" }
+      ],
+      math: [
+        { q: "Let A: All badminton players are good sportspersons. B: All persons who play cricket are good sportspersons. Let X denote the set of all badminton players, Y of all cricket players, and Z of all good sportspersons. Which of the following statements is correct?", options: ["Z contains both X and Y", "Z contains X and Y is outside", "X contains Y and Z", "None of the mentioned"], answer: "Z contains both X and Y" },
+        { q: "Let the students who like table tennis be 12, the ones who like lawn tennis 10, and those who like only table tennis are 6. Then, the number of students who like only lawn tennis, assuming there are a total of 16 students, is:", options: ["16", "8", "4", "10"], answer: "4" },
+        { q: "A matrix having one row and many columns is known as?", options: ["Row matrix", "Column matrix", "Diagonal matrix", "None of the mentioned"], answer: "Row matrix" },
+        { q: "The trace of the matrix is defined as _______", options: ["Sum of all the elements of the matrix", "Sum of all the elements of the leading diagonal of the matrix", "Sum of all non-zero elements of the matrix", "None of the mentioned"], answer: "Sum of all the elements of the leading diagonal of the matrix" },
+        { q: "Two matrices can be added if _______", options: ["rows of both the matrices are same", "columns of both the matrices are same", "both rows and columns of both matrices are same", "number of rows of first matrix should be equal to the number of columns of second"], answer: "both rows and columns of both matrices are same" },
+        { q: "A compound proposition that is neither a tautology nor a contradiction is called a ___________", options: ["Contingency", "Equivalence", "Condition", "Inference"], answer: "Contingency" },
+        { q: "If a set contains 3 elements, the number of subsets is:", options: ["6", "3", "12", "8"], answer: "8" },
+        { q: "If a set is empty, then the number of subsets will be _________", options: ["1", "2", "0", "4"], answer: "1" },
+        { q: "Let A(1), A(2), A(3), ……., A(100) be 100 sets such that the number of elements in A(i)=i+1 and A(1) is subset of A(2), A(2) is subset of A(3), …, A(99) is subset of A(100). The number of elements in the union of all the sets are: n(A(1) U A(2) U A(3) ….. U A(100)).", options: ["99", "100", "101", "102"], answer: "101" },
+        { q: "Which of the following statement is a proposition?", options: ["Get me a glass of milkshake", "God bless you!", "What is the time now?", "The only odd prime number is 2"], answer: "The only odd prime number is 2" }
+      ]
+    };
+
+    // === Start Quiz ===
+    document.getElementById("startQuizBtn").onclick = () => {
+      selectedSubject = document.getElementById("subjectSelect").value;
+      if (!selectedSubject) return alert("Please select a subject");
+      quizQuestions = questionBank[selectedSubject];
+      const form = document.getElementById("quizForm");
+      form.innerHTML = "";
+      quizQuestions.forEach((q, i) => {
+        const div = document.createElement("div");
+        div.innerHTML = `<p>${i + 1}. ${q.q}</p>` + q.options.map(opt => `<label><input type="radio" name="q${i}" value="${opt}"> ${opt}</label><br>`).join("");
+        form.appendChild(div);
+      });
+      document.getElementById("subjectStep").classList.add("hidden");
+      document.getElementById("quizStep").classList.remove("hidden");
+    };
+
+    // === Submit Quiz ===
+    document.getElementById("submitQuizBtn").onclick = () => {
+      quizScore = 0;
+      quizQuestions.forEach((q, i) => {
+        const selected = document.querySelector(`input[name="q${i}"]:checked`);
+        if (selected && selected.value === q.answer) quizScore++;
+      });
+      skillLevel = quizScore <= 1 ? "Beginner" : quizScore <= 5 ? "Intermediate" : "Advanced";
+      document.getElementById("scoreText").textContent = `Score: ${quizScore}/${quizQuestions.length}`;
+      document.getElementById("skillText").textContent = `Skill Level: ${skillLevel}`;
+      document.getElementById("quizStep").classList.add("hidden");
+      document.getElementById("resultStep").classList.remove("hidden");
+    };
+
+// === Find Peers (Smart Match) ===
+document.getElementById("findPeersBtn").onclick = async () => {
+  const profilesSnap = await getDocs(collection(db, "profiles"));
+  peers = []; // Reset the peers array
+
+  console.log("Profiles fetched:", profilesSnap.size);  // Debugging line
+  for (const profileDoc of profilesSnap.docs) {
+    const p = profileDoc.data();
+    console.log("Checking profile:", profileDoc.id, "- Subject:", p.subject, "Skill:", p.skill);  // Debugging line
+
+    // Match based on subject and skill (modified to match skill logic)
+    if (p.subject.toLowerCase() === selectedSubject.toLowerCase() && profileDoc.id !== currentUserId) {
+      // Matching skill levels
+      if (
+        (skillLevel === "Beginner" && (p.skill === "Intermediate" || p.skill === "Advanced")) ||
+        (skillLevel === "Intermediate" && p.skill === "Advanced") ||
+        (skillLevel === "Advanced" && p.skill === "Advanced")
+      ) {
+        const studentDoc = await getDoc(doc(db, "students", profileDoc.id));
+        const s = studentDoc.exists() ? studentDoc.data() : {};
+        peers.push({ id: profileDoc.id, name: s.name || "Anonymous", skill: p.skill, subject: p.subject, availability: p.availability });
+      }
+    }
+  }
+
+  console.log("Matching peers:", peers);  // Debugging line
+  displayPeers(peers.slice(0, 3));  // Display first 3 peers
+  document.getElementById("resultStep").classList.add("hidden");
+  document.getElementById("peerStep").classList.remove("hidden");
+};
+
+
+    function displayPeers(peers) {
+      const list = document.getElementById("peerList");
+      list.innerHTML = "";
+      peers.forEach(peer => {
+        const div = document.createElement("div");
+        div.className = "peer-item";
+        div.innerHTML = `
+          <span>${peer.name} - ${peer.skill} - ${peer.subject} - ${peer.availability}</span>
+          <div>
+            <button class="btn" onclick="acceptPeer('${peer.id}','${peer.name}')">Accept</button>
+            <button class="btn" onclick="rejectPeer('${peer.id}')">Reject</button>
+          </div>
+        `;
+        list.appendChild(div);
+      });
+    }
+
+    window.acceptPeer = (peerId, name) => {
+      chatId = [currentUserId, peerId].sort().join("_");
+      currentPeer = { id: peerId, name: name };
+      document.getElementById("peerStep").classList.add("hidden");
+      document.getElementById("chatStep").classList.remove("hidden");
+      document.getElementById("chatPeerName").textContent = name;
+      listenForMessages();
+    };
+
+    window.rejectPeer = (peerId) => {
+      rejectCount++; // Increment reject count
+      if (rejectCount >= 3) {
+        alert("❌ You rejected 3 times. Please retake the quiz.");
+        location.reload(); // Reload page if 3 rejections are reached
+      } else {
+        alert(`❌ Peer rejected. You can reject ${3 - rejectCount} more times.`);
+        // Remove the rejected peer from the list and get a new one
+        peers = peers.filter(peer => peer.id !== peerId); // Filter out rejected peer
+        displayPeers(peers.slice(0, 3)); // Update peer list
+      }
+    };
+
+    // === SEND CHAT MESSAGE ===
+    async function sendChatMessage(content) {
+      const msgRef = collection(db, "chats", chatId, "messages");
+      await addDoc(msgRef, { sender: currentUserId, content, timestamp: serverTimestamp() });
+
+      const preview = content;
+      await setDoc(doc(db, "messageList", currentUserId, "chats", chatId), { chatId, peerId: currentPeer.id, peerName: currentPeer.name, lastMessage: preview, updatedAt: serverTimestamp() });
+      await setDoc(doc(db, "messageList", currentPeer.id, "chats", chatId), { chatId, peerId: currentUserId, peerName: "You", lastMessage: preview, updatedAt: serverTimestamp() });
+    }
+
+    document.getElementById("sendMessageBtn").onclick = () => {
+      const text = document.getElementById("chatMessage").value.trim();
+      if (!text) return;
+      sendChatMessage(text);
+      document.getElementById("chatMessage").value = "";
+    };
+
+    // Real-time listening for messages
+    function listenForMessages() {
+      const chatBox = document.getElementById("chatBox");
+      const q = query(collection(db, "chats", chatId, "messages"), orderBy("timestamp"));
+      onSnapshot(q, (snapshot) => {
+        chatBox.innerHTML = "";
+        snapshot.docs.forEach(docSnap => {
+          const msg = docSnap.data();
+          const div = document.createElement("div");
+          div.className = "message " + (msg.sender === currentUserId ? "sent" : "received");
+          div.innerHTML = msg.content;
+          chatBox.appendChild(div);
+        });
+        chatBox.scrollTop = chatBox.scrollHeight;
+      });
+    }
+  </script>
+</body>
+</html>

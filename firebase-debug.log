@@ -1,0 +1,46 @@
+[debug] [2025-06-20T17:47:10.235Z] ----------------------------------------------------------------------
+[debug] [2025-06-20T17:47:10.240Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\user\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy
+[debug] [2025-06-20T17:47:10.241Z] CLI Version:   14.8.0
+[debug] [2025-06-20T17:47:10.241Z] Platform:      win32
+[debug] [2025-06-20T17:47:10.241Z] Node Version:  v22.16.0
+[debug] [2025-06-20T17:47:10.242Z] Time:          Sat Jun 21 2025 01:47:10 GMT+0800 (Malaysia Time)
+[debug] [2025-06-20T17:47:10.242Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-06-20T17:47:10.519Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-06-20T17:47:10.520Z] > authorizing via signed-in user (ayuzenil01@gmail.com)
+[debug] [2025-06-20T17:47:10.520Z] [iam] checking project lernie-11007 for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2025-06-20T17:47:10.521Z] Checked if tokens are valid: true, expires at: 1750445133159
+[debug] [2025-06-20T17:47:10.521Z] Checked if tokens are valid: true, expires at: 1750445133159
+[debug] [2025-06-20T17:47:10.522Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/lernie-11007:testIamPermissions [none]
+[debug] [2025-06-20T17:47:10.522Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/lernie-11007:testIamPermissions x-goog-quota-user=projects/lernie-11007
+[debug] [2025-06-20T17:47:10.522Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/lernie-11007:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2025-06-20T17:47:18.043Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/lernie-11007:testIamPermissions 200
+[debug] [2025-06-20T17:47:18.044Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/lernie-11007:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2025-06-20T17:47:18.046Z] Checked if tokens are valid: true, expires at: 1750445133159
+[debug] [2025-06-20T17:47:18.047Z] Checked if tokens are valid: true, expires at: 1750445133159
+[debug] [2025-06-20T17:47:18.048Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/lernie-11007 [none]
+[debug] [2025-06-20T17:47:20.232Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/lernie-11007 200
+[debug] [2025-06-20T17:47:20.232Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/lernie-11007 {"projectId":"lernie-11007","projectNumber":"270699557554","displayName":"LERNIE","name":"projects/lernie-11007","resources":{"hostingSite":"lernie-11007"},"state":"ACTIVE","etag":"1_34a6f158-fe80-4a9a-9f5c-f772286da5ba"}
+[info] 
+[info] === Deploying to 'lernie-11007'...
+[info] 
+[info] i  deploying hosting 
+[debug] [2025-06-20T17:47:20.239Z] Checked if tokens are valid: true, expires at: 1750445133159
+[debug] [2025-06-20T17:47:20.239Z] Checked if tokens are valid: true, expires at: 1750445133159
+[debug] [2025-06-20T17:47:20.239Z] >>> [apiv2][query] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/lernie-11007/versions [none]
+[debug] [2025-06-20T17:47:20.240Z] >>> [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/lernie-11007/versions {"status":"CREATED","labels":{"deployment-tool":"cli-firebase"}}
+[debug] [2025-06-20T17:47:23.240Z] <<< [apiv2][status] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/lernie-11007/versions 200
+[debug] [2025-06-20T17:47:23.241Z] <<< [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/lernie-11007/versions {"name":"projects/270699557554/sites/lernie-11007/versions/83eb89e25aac4553","status":"CREATED","config":{},"labels":{"deployment-tool":"cli-firebase"}}
+[info] i  hosting[lernie-11007]: beginning deploy... 
+[info] i  hosting[lernie-11007]: found 197037 files in . 
+[debug] [2025-06-20T17:57:45.644Z] [hosting] uploading with 200 concurrency
+[debug] [2025-06-20T17:57:45.668Z] [hosting] hash cache [] not populated
+[debug] [2025-06-20T17:57:48.045Z] Error: EBUSY: resource busy or locked, open 'C:\Users\user\ntuser.dat.LOG2'
+[error] 
+[error] Error: An unexpected error has occurred.
+[debug] [2025-06-20T17:57:48.049Z] Error: EBUSY: resource busy or locked, open 'C:\Users\user\ntuser.dat.LOG1'
+[error] 
+[error] Error: An unexpected error has occurred.
+[debug] [2025-06-20T17:57:48.051Z] Error: EBUSY: resource busy or locked, open 'C:\Users\user\NTUSER.DAT'
+[error] 
+[error] Error: An unexpected error has occurred.

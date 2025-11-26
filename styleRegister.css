@@ -1,0 +1,105 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.gradient-bg {
+  background: linear-gradient(to right, #d4f4f1, #bcd6ff);
+  min-height: 100vh;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 50px;
+  align-items: center;
+}
+
+.logo {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.nav-btn {
+  margin-left: 10px;
+  padding: 8px 20px;
+  border: 2px solid #000;
+  border-radius: 20px;
+  background: transparent;
+  text-decoration: none;
+  color: #000;
+  font-weight: 500;
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 50px 80px;
+}
+
+.left-section {
+  max-width: 50%;
+}
+
+.left-section h1 {
+  font-size: 40px;
+  margin-bottom: 10px;
+}
+
+.left-section p {
+  font-style: italic;
+  max-width: 80%;
+}
+
+.right-section {
+  width: 400px;
+}
+
+.form-card {
+  background: white;
+  padding: 30px;
+  border-radius: 25px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.form-card h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+form label {
+  display: block;
+  margin-top: 15px;
+  font-weight: bold;
+}
+
+form label span {
+  font-weight: normal;
+  font-size: 12px;
+  color: #666;
+  margin-left: 5px;
+}
+
+form input, form select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.submit-btn {
+  width: 100%;
+  background: black;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 25px;
+  margin-top: 20px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 16px;
+}

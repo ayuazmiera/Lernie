@@ -1,0 +1,374 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+:root {
+    --primary-color: #5a7dff; /* Example blue for primary buttons */
+    --secondary-color: #e0e0e0; /* Example light gray for secondary buttons */
+    --text-dark: #333;
+    --text-light: #666;
+    --background-gradient-start: #e0f2f7; /* Light blue */
+    --background-gradient-end: #d0e8f2;   /* Slightly darker blue */
+    --login-card-bg: #ffffff;
+    --border-color: #ddd;
+    --button-login-bg: #2d2d2d;
+    --button-login-text: #ffffff;
+}
+
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, var(--background-gradient-start) 0%, var(--background-gradient-end) 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    color: var(--text-dark);
+    overflow: hidden; /* Hide overflow for bottom shapes */
+}
+
+.container {
+    display: flex;
+    width: 100%;
+    max-width: 1200px; /* Adjust as needed */
+    background-color: transparent; /* Background gradient is on body */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    min-height: 700px; /* Adjust as needed */
+    position: relative;
+}
+
+/* Navbar */
+.navbar {
+    position: absolute;
+    top: 30px;
+    left: 40px;
+    right: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 10; /* Ensure navbar is above other content */
+}
+
+.logo {
+    font-weight: 700;
+    font-size: 1.5em;
+    color: var(--text-dark);
+}
+
+.btn {
+    padding: 10px 25px;
+    border: none;
+    border-radius: 25px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    margin-left: 10px;
+    text-decoration: none; /* Added for <a> tags to look like buttons */
+    display: inline-block; /* Ensures padding/margin work correctly for <a> tags */
+    text-align: center; /* Centers text for <a> tags */
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #4a6ccc; /* Slightly darker blue */
+}
+
+.btn-secondary {
+    background-color: var(--secondary-color);
+    color: var(--text-dark);
+    border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+    background-color: #d0d0d0;
+}
+
+/* Content Section (for index.html like layout) */
+.content-section {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 40px;
+    position: relative;
+    z-index: 5; /* Ensure content is above bottom shapes */
+}
+
+/* NEW: Content Section for centered elements (like login.html, forgot_password.html, register.html if not side-by-side) */
+.content-section-centered {
+    display: flex;
+    justify-content: center; /* Centers horizontally */
+    align-items: center;     /* Centers vertically */
+    width: 100%;
+    min-height: 100%; /* Ensure it takes full height of its parent container */
+    padding: 0 40px; /* Keep consistent padding */
+    box-sizing: border-box; /* Include padding in width/height calculations */
+    position: relative; /* Needed for z-index and relative positioning of children */
+    z-index: 5; /* Ensure content is above bottom shapes */
+}
+
+
+.hero-text {
+    flex: 1;
+    padding-right: 50px;
+}
+
+.hero-text h1 {
+    font-size: 3.5em;
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 20px;
+    color: var(--text-dark);
+    text-transform: uppercase;
+}
+
+.hero-text p {
+    font-size: 1.1em;
+    line-height: 1.6;
+    color: var(--text-light);
+    margin-bottom: 40px;
+}
+
+.btn-explore {
+    background-color: transparent;
+    border: 2px solid var(--text-dark);
+    color: var(--text-dark);
+    padding: 12px 30px;
+    border-radius: 30px;
+    font-size: 1.1em;
+    font-weight: 600;
+}
+
+.btn-explore:hover {
+    background-color: var(--text-dark);
+    color: white;
+}
+
+/* Login Card */
+.login-card {
+    background-color: var(--login-card-bg);
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+    width: 380px; /* Fixed width as per image */
+    box-sizing: border-box; /* Include padding in width */
+}
+
+.login-card h2 {
+    font-size: 2em;
+    font-weight: 600;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.login-card > p { /* Target the direct paragraph child */
+    text-align: center;
+    color: var(--text-light);
+    margin-bottom: 30px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.9em;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text-dark);
+}
+
+.form-group input[type="text"], /* Added type="text" for register form */
+.form-group input[type="email"],
+.form-group input[type="password"] {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1em;
+    box-sizing: border-box;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.password-hint {
+    font-size: 0.8em;
+    color: var(--text-light);
+    font-weight: 400;
+    margin-left: 5px;
+}
+
+.password-input-wrapper {
+    position: relative;
+}
+
+.password-input-wrapper input {
+    padding-right: 40px; /* Make space for the eye icon */
+}
+
+.password-toggle {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: var(--text-light);
+    font-size: 1.1em;
+}
+
+.forgot-password {
+    display: block;
+    text-align: right;
+    font-size: 0.9em;
+    color: var(--text-light);
+    text-decoration: none;
+    margin-top: -10px; /* Pull it up closer to password field */
+    margin-bottom: 25px;
+}
+
+.forgot-password:hover {
+    text-decoration: underline;
+}
+
+.btn-login {
+    width: 100%;
+    background-color: var(--button-login-bg);
+    color: var(--button-login-text);
+    padding: 15px;
+    font-size: 1.1em;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+.btn-login:hover {
+    background-color: #444;
+}
+
+.signup-link {
+    text-align: center;
+    margin-top: 25px;
+    font-size: 0.95em;
+    color: var(--text-light);
+}
+
+.signup-link a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.signup-link a:hover {
+    text-decoration: underline;
+}
+
+/* Bottom shapes */
+.bottom-shapes {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 150px; /* Adjust height of the area where shapes appear */
+    overflow: hidden;
+}
+
+.shape-1, .shape-2 {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px); /* Soften the edges */
+    opacity: 0.6;
+}
+
+.shape-1 {
+    width: 250px;
+    height: 250px;
+    background: radial-gradient(circle, rgba(0, 150, 255, 0.4) 0%, rgba(0, 100, 200, 0.2) 100%);
+    bottom: -100px; /* Position below viewport to only show top part */
+    left: -80px;
+}
+
+.shape-2 {
+    width: 180px;
+    height: 180px;
+    background: radial-gradient(circle, rgba(0, 200, 255, 0.3) 0%, rgba(0, 150, 255, 0.1) 100%);
+    bottom: -50px; /* Position below viewport */
+    left: 100px;
+}
+
+/* Responsive adjustments (optional but recommended) */
+@media (max-width: 992px) {
+    .container {
+        flex-direction: column;
+        align-items: center;
+        padding-top: 120px; /* Make space for fixed navbar */
+        min-height: 100vh;
+    }
+
+    .navbar {
+        position: fixed;
+        width: calc(100% - 80px); /* Account for padding */
+        top: 20px;
+        left: 40px;
+        right: 40px;
+        background-color: rgba(255, 255, 255, 0.9); /* Slightly opaque background */
+        padding: 15px 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    /* Apply flex-direction column to both content sections for responsiveness */
+    .content-section,
+    .content-section-centered { /* FIX: Added .content-section-centered here */
+        flex-direction: column;
+        text-align: center;
+        padding: 20px;
+    }
+
+    .hero-text {
+        padding-right: 0;
+        margin-bottom: 50px;
+    }
+
+    .hero-text h1 {
+        font-size: 2.5em;
+    }
+
+    .login-card {
+        width: 90%; /* Make login card more fluid */
+        max-width: 400px; /* But keep a max-width */
+    }
+
+    .bottom-shapes {
+        display: none; /* Hide complex shapes on smaller screens */
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-text h1 {
+        font-size: 2em;
+    }
+
+    .btn {
+        padding: 8px 20px;
+        font-size: 0.9em;
+    }
+
+    .login-card {
+        padding: 25px;
+    }
+
+    .login-card h2 {
+        font-size: 1.8em;
+    }
+
+    .form-group input {
+        padding: 10px 12px;
+    }
+}

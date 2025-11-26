@@ -1,0 +1,65 @@
+/* style.css */
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(to right, #d0f0e8, #b9dcff);
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 40px;
+  align-items: center;
+}
+
+.logo {
+  font-weight: bold;
+  font-size: 20px;
+}
+
+nav .btn {
+  padding: 8px 20px;
+  margin-left: 10px;
+  border: 2px solid #000;
+  background: transparent;
+  border-radius: 20px;
+  text-decoration: none;
+  color: black;
+  font-weight: 500;
+}
+
+main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 50px 80px;
+}
+
+.left {
+  max-width: 50%;
+}
+
+.left h1 {
+  font-size: 48px;
+  margin-bottom: 10px;
+}
+
+.left p {
+  font-style: italic;
+  margin-bottom: 30px;
+}
+
+.explore-btn {
+  padding: 10px 20px;
+  border: 2px solid #000;
+  text-decoration: none;
+  color: black;
+  border-radius: 25px;
+  font-weight: 500;
+}
+
+.right img {
+  width: 400px;
+  height: auto;
+}

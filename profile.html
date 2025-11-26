@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>LERNIE - Profile</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to right, #c2f0e7, #a3ccff);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    nav {
+      background-color: white;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-evenly;
+      font-weight: bold;
+      font-size: 18px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    nav a { text-decoration: none; color: black; }
+    .dropdown { position: relative; display: inline-block; }
+    .dropdown-content {
+      display: none; position: absolute;
+      background-color: white; min-width: 120px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+      right: 0; border-radius: 5px;
+    }
+    .dropdown-content a {
+      padding: 8px 12px; display: block;
+      color: black; text-decoration: none;
+    }
+    .dropdown:hover .dropdown-content { display: block; }
+    .container {
+      flex-grow: 1; display: flex; justify-content: center; align-items: center;
+      padding: 20px;
+    }
+    .form-card {
+      background: white; padding: 40px;
+      border-radius: 10px; max-width: 450px; width: 100%;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    h2 { text-align: center; margin-bottom: 10px; }
+    #statusIndicator {
+      text-align: center;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+    .online { color: green; font-weight: bold; }
+    .offline { color: red; font-weight: bold; }
+    label { font-weight: 500; display: block; margin-bottom: 6px; }
+    input, select {
+      width: 100%; padding: 10px; margin-bottom: 15px;
+      border: 1px solid #ccc; border-radius: 5px;
+    }
+    .btn-save {
+      width: 100%; padding: 12px; border: none;
+      background: linear-gradient(to right, #6abcb5, #6a95cb);
+      color: white; font-size: 16px; border-radius: 25px;
+      cursor: pointer; margin-bottom: 10px;
+    }
+    .btn-save:hover { opacity: 0.9; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="homepage.html">Home</a>
+  <a href="peerMatch.html">Peer Matching</a>
+  <a href="message.html">Message</a>
+  <a href="studyGroup.html">Study Group</a>
+  <div class="dropdown">
+    <a href="#">Profile ▼</a>
+    <div class="dropdown-content">
+      <a href="website.html" onclick="logout()">Log out</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="form-card">
+    <h2>Profile</h2>
+    <div id="statusIndicator">Status: <span class="offline">Offline</span></div>
+    <form id="profileForm">
+      <label for="name">NAME:</label>
+      <input type="text" id="name" name="name" required>
+
+      <label for="matrix">NO MATRIC:</label>
+      <input type="text" id="matrix" name="matrix" required>
+
+      <label for="course">COURSE:</label>
+      <select id="course" name="course" required>
+        <option value="">-- Select Course --</option>
+        <option value="CAS">CAS</option>
+        <option value="COB">COB</option>
+        <option value="COLGIS">COLGIS</option>
+      </select>
+
+      <label for="email">EMAIL:</label>
+      <input type="email" id="email" name="email" required>
+
+      <label for="skill">SKILL:</label>
+      <select id="skill" name="skill" required>
+        <option value="">Select your skill level</option>
+        <option value="Beginner">Beginner</option>
+        <option value="Intermediate">Intermediate</option>
+        <option value="Advanced">Advanced</option>
+      </select>
+
+      <label for="subject">SUBJECT:</label>
+       <select id="subject" name="subject" required>
+        <option value="">Select subject</option>
+        <option value="Math">Math</option>
+          <option value="Programming">Programming</option>
+         </select>
+
+      <label for="availability">AVAILABILITY:</label>
+      <select id="availability" name="availability" required>
+        <option value="">Select your availability</option>
+        <option value="Weekdays">Weekdays</option>
+        <option value="Weekends">Weekends</option>
+        <option value="Flexible">Flexible</option>
+      </select>
+
+      <button type="submit" class="btn-save">Save Profile</button>
+    </form>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
+import { getFirestore, doc, setDoc, getDoc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAsZIqVtjiLb9jmCfIMFXkpOPH2NP8uTJg",
+  authDomain: "lernie-11007.firebaseapp.com",
+  projectId: "lernie-11007",
+  storageBucket: "lernie-11007.appspot.com",
+  messagingSenderId: "270699557554",
+  appId: "1:270699557554:web:e0f0037c467694689a8fab"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+const profileForm = document.getElementById("profileForm");
+const statusIndicator = document.getElementById("statusIndicator");
+
+// Track login state
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    alert("You are not logged in.");
+    window.location.href = "website.html";
+    return;
+  }
+
+  const uid = user.uid;
+  const studentRef = doc(db, "students", uid);
+
+  // Mark online
+  await updateDoc(studentRef, {
+    online: true,
+    lastActive: serverTimestamp()
+  });
+  statusIndicator.innerHTML = 'Status: <span class="online">Online 🟢</span>';
+
+  // Mark offline when tab closes
+  window.addEventListener("beforeunload", async () => {
+    await updateDoc(studentRef, {
+      online: false,
+      lastActive: serverTimestamp()
+    });
+  });
+
+  // Load data
+  try {
+    const userDoc = await getDoc(studentRef);
+    if (userDoc.exists()) {
+      const data = userDoc.data();
+      document.getElementById("name").value = data.name || "";
+      document.getElementById("matrix").value = data.matrix || "";
+      document.getElementById("course").value = data.course || "";
+      document.getElementById("email").value = data.email || user.email;
+    } else {
+      document.getElementById("email").value = user.email;
+    }
+
+    const profileDoc = await getDoc(doc(db, "profiles", uid));
+    if (profileDoc.exists()) {
+      const pData = profileDoc.data();
+      document.getElementById("skill").value = pData.skill || "";
+      document.getElementById("subject").value = pData.subject || "";
+      document.getElementById("availability").value = pData.availability || "";
+    }
+  } catch (err) {
+    console.error("Error loading profile:", err);
+  }
+});
+
+// Save profile
+profileForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const user = auth.currentUser;
+  if (!user) return;
+  const uid = user.uid;
+
+  const name = document.getElementById("name").value;
+  const matrix = document.getElementById("matrix").value;
+  const course = document.getElementById("course").value;
+  const email = document.getElementById("email").value;
+  const skill = document.getElementById("skill").value;
+  const subject = document.getElementById("subject").value;
+  const availability = document.getElementById("availability").value;
+
+  try {
+    await setDoc(doc(db, "students", uid), {
+      name, matrix, course, email,
+      online: true,
+      lastActive: serverTimestamp()
+    }, { merge: true });
+
+    await setDoc(doc(db, "profiles", uid), {
+      skill, subject, availability
+    }, { merge: true });
+
+    alert("Profile updated successfully!");
+  } catch (err) {
+    console.error("Error saving profile:", err);
+    alert("Error saving profile");
+  }
+});
+
+// Logout
+window.logout = async function () {
+  try {
+    const uid = auth.currentUser.uid;
+    await updateDoc(doc(db, "students", uid), {
+      online: false,
+      lastActive: serverTimestamp()
+    });
+    await signOut(auth);
+    window.location.href = "website.html";
+  } catch (err) {
+    console.error(err);
+  }
+};
+</script>
+
+</body>
+</html>
