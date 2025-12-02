@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LERNIE - Smart Peer Learning Platform</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: url('picture_1.png') no-repeat center center fixed;
+      background-size: cover;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      color: white; /* White text for better contrast */
+      overflow: hidden;
+      transition: all 0.5s ease;
+    }
+
+    /* No overlay, the background stays intact */
+    /* Remove the overlay code from the previous solution */
+
+    /* Top bar with logo and buttons */
+    header {
+      position: absolute;
+      top: 20px;
+      left: 30px;
+      right: 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1; /* ensure nav stays above content */
+    }
+
+    .logo {
+      font-weight: bold;
+      font-size: 24px;
+      color: white; /* White text for the logo */
+      animation: fadeIn 2s ease-in-out;
+    }
+
+    nav {
+      display: flex;
+      gap: 10px;
+    }
+
+    /* Reusable button style */
+    .nav-btn, .explore-btn {
+      padding: 10px 20px;
+      border: 2px solid #fff; /* White border for better contrast */
+      background: transparent;
+      border-radius: 20px;
+      text-decoration: none;
+      color: white; /* White text for buttons */
+      font-weight: 500;
+      display: inline-block;
+      transition: all 0.3s ease;
+    }
+
+    .nav-btn:hover, .explore-btn:hover {
+      background: #fff;
+      color: #000;
+      transform: scale(1.1);
+    }
+
+    /* Main content */
+    .container {
+      text-align: center;
+      max-width: 700px;
+      padding: 20px;
+      border-radius: 10px;
+      z-index: 1; /* ensure container is above content */
+      color: white; /* Make text white for better visibility */
+      animation: fadeIn 2s ease-in-out;
+      text-shadow: 3px 3px 15px rgba(0, 0, 0, 0.6); /* Added text-shadow for extra clarity */
+    }
+
+    .container h1 {
+      font-size: 50px;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      letter-spacing: 1px;
+      animation: slideIn 2s ease-out;
+    }
+
+    .container p {
+      font-size: 20px;
+      font-weight: 400;
+      margin-bottom: 20px;
+      animation: slideIn 2s ease-out;
+    }
+
+    .illustration {
+      margin-top: 30px;
+    }
+
+    .illustration img {
+      width: 100%;
+      max-width: 1000px;
+      height: auto;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+    @keyframes slideIn {
+      0% { transform: translateY(-50px); opacity: 0; }
+      100% { transform: translateY(0); opacity: 1; }
+    }
+
+    /* Welcome Pop-up */
+    .popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 20px;
+      border-radius: 10px;
+      display: none;
+      z-index: 2;
+      animation: fadeIn 2s ease-in-out;
+    }
+
+    .popup.active {
+      display: block;
+    }
+
+    .popup h2 {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    .popup p {
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
+
+    .close-btn {
+      padding: 8px 20px;
+      border: 2px solid #fff;
+      background: transparent;
+      border-radius: 20px;
+      color: white;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .close-btn:hover {
+      background: #fff;
+      color: #000;
+      transform: scale(1.1);
+    }
+
+  </style>
+</head>
+<body>
+  
+  <!-- Header with Logo and Buttons -->
+  <header>
+    <div class="logo">LERNIE</div>
+    <nav>
+      <a href="register.html" class="nav-btn">Register</a>
+      <a href="login.html" class="nav-btn">Login</a>
+    </nav>
+  </header>
+
+  <!-- Main content -->
+  <div class="container">
+    <h1>SMART PEER LEARNING PLATFORM</h1>
+    <p>Website that matches students with peers for study groups based on skills and subjects.</p>
+    <a href="explore.html" class="explore-btn">Let's explore</a>
+  </div>
+
+  <!-- Welcome Pop-up -->
+  <div class="popup" id="popup">
+    <h2>Welcome to LERNIE!</h2>
+    <p>We're excited to have you join our Smart Peer Learning Platform. Let's start exploring!</p>
+    <button class="close-btn" onclick="closePopup()">Close</button>
+  </div>
+
+  <script>
+    // Pop-up display logic
+    window.onload = function() {
+      setTimeout(function() {
+        document.getElementById('popup').classList.add('active');
+      }, 1000); // Pop-up appears after 1 second
+    };
+
+    // Close pop-up
+    function closePopup() {
+      document.getElementById('popup').classList.remove('active');
+    }
+  </script>
+
+</body>
+</html>
